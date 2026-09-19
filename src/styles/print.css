@@ -1,0 +1,22 @@
+@media print {
+  @page { size: A4; margin: 0.6in; }
+
+  body { background: #fff; }
+  .no-print, .topbar, .rail-col, .toast { display: none !important; }
+  .page { display: block; padding: 0; max-width: none; }
+  .main > *:not(.print-only) { display: none !important; }
+  .main > .print-only { display: block !important; }
+
+  .cv-page {
+    background: #fff !important;
+    color: #000 !important;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+    padding: 0;
+    font-size: 11pt;
+  }
+  .cv-bullets li.is-new { background: transparent; margin-left: 0; padding: 0; }
+  .cv-bullets li[contenteditable] { outline: none !important; }
+  .cv-section { break-inside: avoid; }
+}

@@ -1,0 +1,35 @@
+/* The document itself. Always black on white — it is the artefact that gets submitted. */
+
+.cv-page {
+  background: #ffffff;
+  color: #000000;
+  font-family: var(--font-cv);
+  font-size: 12.5px;
+  line-height: 1.45;
+  padding: 56px 64px;
+  border: 1px solid var(--color-rule);
+  border-radius: var(--radius-input);
+  box-shadow: var(--shadow-paper);
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  overflow-wrap: anywhere;
+}
+.cv-header { display: flex; flex-direction: column; align-items: center; gap: 4px; padding-bottom: 10px; border-bottom: 1px solid #000; text-align: center; }
+.cv-name { font-size: 22px; font-weight: 700; letter-spacing: 0.02em; text-transform: uppercase; }
+.cv-section { display: flex; flex-direction: column; gap: 6px; }
+.cv-section-title { font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; border-bottom: 1px solid #000; padding-bottom: 2px; }
+.cv-entry-head { display: flex; justify-content: space-between; gap: 16px; }
+.cv-entry-head + .cv-entry-head { margin-top: 8px; }
+.cv-entry-sub { display: flex; justify-content: space-between; gap: 16px; }
+.cv-bullets { margin: 2px 0 0; padding-left: 18px; display: flex; flex-direction: column; gap: 3px; }
+.cv-bullets li.is-new { background: var(--color-positive-soft); margin-left: -6px; padding: 2px 6px; border-radius: 4px; }
+.cv-bullets li[contenteditable]:hover { outline: 1px dashed var(--color-info); outline-offset: 2px; }
+.cv-bullets li[contenteditable]:focus { outline: 2px solid var(--color-info); outline-offset: 2px; box-shadow: none; }
+.cv-skill-line strong { font-weight: 700; }
+.cv-empty { color: #666; font-family: var(--font-ui); font-size: var(--text-md); text-align: center; padding: 40px 0; }
+
+@media (max-width: 700px) {
+  .cv-page { padding: 24px 20px; }
+  .cv-entry-head, .cv-entry-sub { flex-direction: column; gap: 0; }
+}
