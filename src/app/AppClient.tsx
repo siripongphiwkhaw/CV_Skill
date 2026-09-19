@@ -1,17 +1,19 @@
-import { motion, useReducedMotion } from 'motion/react';
-import { Rail } from './components/Rail';
-import { TopBar } from './components/TopBar';
-import { computeMatch } from './lib/score';
-import { maxReachableStep, useAppState } from './state/useAppState';
-import { BuildStep } from './steps/BuildStep';
-import { CompareStep } from './steps/CompareStep';
-import { InterviewStep } from './steps/InterviewStep';
-import { JobStep } from './steps/JobStep';
-import { ProfileStep } from './steps/ProfileStep';
-import { UpdateStep } from './steps/UpdateStep';
+'use client';
 
-export default function App() {
-  const state = useAppState();
+import { motion, useReducedMotion } from 'motion/react';
+import { Rail } from '../components/Rail';
+import { TopBar } from '../components/TopBar';
+import { computeMatch } from '../lib/score';
+import { maxReachableStep, useAppState, type InitialAppData } from '../state/useAppState';
+import { BuildStep } from '../steps/BuildStep';
+import { CompareStep } from '../steps/CompareStep';
+import { InterviewStep } from '../steps/InterviewStep';
+import { JobStep } from '../steps/JobStep';
+import { ProfileStep } from '../steps/ProfileStep';
+import { UpdateStep } from '../steps/UpdateStep';
+
+export function AppClient(initial: InitialAppData) {
+  const state = useAppState(initial);
   const { cv, profile, session, goTo } = state;
   const reduce = useReducedMotion();
   const maxStep = maxReachableStep(cv, profile, session);

@@ -1,3 +1,4 @@
+import { signOut } from 'next-auth/react';
 import type { Step } from '../types/jobFit';
 
 interface Props {
@@ -23,10 +24,13 @@ export function TopBar({ name, maxStep, onGo }: Props) {
           <button key={l.step} type="button" disabled={l.step > maxStep} onClick={() => onGo(l.step)}>{l.label}</button>
         ))}
       </nav>
-      <div className="topbar-note">No API key · everything stays in this browser</div>
+      <div className="topbar-note">No API key · synced to your account</div>
       <div className="topbar-user">
         <div className="avatar" aria-hidden="true">{initial}</div>
         <span>{name.trim() ? name.split(' ')[0] : 'You'}</span>
+        <button type="button" className="btn btn-quiet btn-sm" onClick={() => signOut({ callbackUrl: '/login' })}>
+          Sign out
+        </button>
       </div>
     </header>
   );

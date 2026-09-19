@@ -1,15 +1,17 @@
 # Job Fit CV
 
-A local web app that takes one job posting and walks you from "here is my CV" to "here is a CV built for this job, and here is whether I actually want it" — in six steps, with **no API key and no server**. Every AI step is a *prompt exchange*: the app writes the prompt, you paste it into any Claude chat (claude.ai, Claude Code, the desktop app), paste the JSON reply back, and the app validates it before anything is applied.
+A web app that takes one job posting and walks you from "here is my CV" to "here is a CV built for this job, and here is whether I actually want it" — in six steps, with **no API key**. Every AI step is a *prompt exchange*: the app writes the prompt, you paste it into any Claude chat (claude.ai, Claude Code, the desktop app), paste the JSON reply back, and the app validates it before anything is applied.
+
+Built with Next.js (App Router). Each user has an account (email + password); your CV, profile and job session are saved to a Postgres database and follow you across devices, with a fast `localStorage` cache for offline/instant reads.
 
 ## Quick start
 
 ```bash
+cp .env.example .env   # fill in DATABASE_URL and AUTH_SECRET
 npm install
-npm run dev        # http://localhost:5173
+npm run db:push        # create tables from prisma/schema.prisma
+npm run dev             # http://localhost:3000
 ```
-
-Nothing else. Everything you enter stays in your browser's `localStorage`.
 
 ## The six steps
 
@@ -40,11 +42,13 @@ Every prompt carries the same hard rule: never invent employers, titles, dates, 
 
 ## Data
 
-Three `localStorage` keys, all guarded (corrupt or blocked storage reads as "nothing saved"):
+Sign in required. Each account (`User` row in Postgres, see `prisma/schema.prisma`) holds three JSON columns, mirrored into `localStorage` as a cache (guarded — corrupt or blocked storage reads as "nothing saved"):
 
-- `cv-job-fit:cv:v1` — your structured CV
-- `cv-job-fit:profile:v1` — skills, ratings, survey answers
-- `cv-job-fit:session:v1` — the current job: posting, comparison, accepted gaps, tailored CV, interview pack, and which step you're on (a reload lands you back there)
+- `cv` — your structured CV
+- `profile` — skills, ratings, survey answers
+- `session` — the current job: posting, comparison, accepted gaps, tailored CV, interview pack, and which step you're on (a reload lands you back there)
+
+Changes save to `localStorage` immediately and sync to the database on a 600ms debounce (`PUT /api/state`). Auth is `next-auth` (Credentials provider, JWT sessions, bcrypt-hashed passwords) — see `src/auth.ts` / `src/auth.config.ts`. Route access is enforced in `src/proxy.ts`.
 
 "Start another job" resets only the session.
 
@@ -52,10 +56,13 @@ Three `localStorage` keys, all guarded (corrupt or blocked storage reads as "not
 
 | Command | What it does |
 |---|---|
-| `npm run dev` | Vite dev server |
-| `npm run build` | Typecheck, then production build |
+| `npm run dev` | Next.js dev server |
+| `npm run build` | Production build (`next build`) |
+| `npm start` | Run the production build |
 | `npm test` | Vitest — scoring, storage, reply parsing, prompt building |
 | `npm run typecheck` | `tsc --noEmit` |
+| `npm run db:push` | Push `prisma/schema.prisma` to the database (no migration history) |
+| `npm run db:migrate` | Create/apply a Prisma migration |
 
 ## Design
 

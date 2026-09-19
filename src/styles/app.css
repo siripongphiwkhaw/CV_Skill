@@ -226,6 +226,16 @@ button.link:hover { text-decoration: underline; }
 .reflect-opts button { height: 36px; padding: 0 14px; border-radius: var(--radius-pill); border: 1px solid var(--color-rule); background: var(--color-card); font-weight: 600; font-size: var(--text-md); }
 .reflect-opts button.on { border: 2px solid var(--color-brand); background: var(--color-brand-soft); color: var(--color-brand-hover); }
 
+/* ---------- auth ---------- */
+
+.auth-page { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: var(--space-lg); background: var(--color-paper); }
+.auth-card {
+  width: 100%; max-width: 360px; background: var(--color-card); border: 1px solid var(--color-rule);
+  border-radius: var(--radius-card); padding: var(--space-xl); display: flex; flex-direction: column; gap: var(--space-sm);
+}
+.auth-card label { display: flex; flex-direction: column; gap: 6px; font-weight: 600; font-size: var(--text-md); }
+.auth-error { color: var(--color-critical); font-size: var(--text-md); font-weight: 600; }
+
 /* ---------- toast ---------- */
 
 .toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); background: var(--color-ink-strong); color: #fff; padding: 12px 18px; border-radius: var(--radius-btn); font-weight: 600; box-shadow: var(--shadow-paper); z-index: 20; }
