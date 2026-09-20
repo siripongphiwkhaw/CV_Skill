@@ -1,4 +1,5 @@
-import { signOut } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
+import { createClient } from '@/lib/supabase/client';
 import type { Step } from '../types/jobFit';
 
 interface Props {
@@ -15,7 +16,16 @@ const LINKS: { label: string; step: Step }[] = [
 ];
 
 export function TopBar({ name, maxStep, onGo }: Props) {
+  const router = useRouter();
   const initial = name.trim().charAt(0).toUpperCase() || '?';
+
+  async function handleSignOut() {
+    const supabase = createClient();
+    await supabase.auth.signOut();
+    router.push('/login');
+    router.refresh();
+  }
+
   return (
     <header className="topbar no-print">
       <div className="topbar-brand"><span className="topbar-mark" aria-hidden="true" />Job Fit CV</div>
@@ -28,7 +38,7 @@ export function TopBar({ name, maxStep, onGo }: Props) {
       <div className="topbar-user">
         <div className="avatar" aria-hidden="true">{initial}</div>
         <span>{name.trim() ? name.split(' ')[0] : 'You'}</span>
-        <button type="button" className="btn btn-quiet btn-sm" onClick={() => signOut({ callbackUrl: '/login' })}>
+        <button type="button" className="btn btn-quiet btn-sm" onClick={handleSignOut}>
           Sign out
         </button>
       </div>

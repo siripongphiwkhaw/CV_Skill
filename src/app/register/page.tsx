@@ -1,41 +1,41 @@
 'use client';
 
 import { useState, type FormEvent } from 'react';
-import { signIn } from 'next-auth/react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { createClient } from '@/lib/supabase/client';
 
 export default function RegisterPage() {
   const router = useRouter();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
+  const [notice, setNotice] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
 
   async function onSubmit(e: FormEvent) {
     e.preventDefault();
     setBusy(true);
     setError(null);
+    setNotice(null);
 
-    const res = await fetch('/api/register', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, password }),
-    });
+    const supabase = createClient();
+    const { data, error: signUpError } = await supabase.auth.signUp({ email, password });
+    setBusy(false);
 
-    if (!res.ok) {
-      const body: unknown = await res.json().catch(() => null);
-      const message = body && typeof body === 'object' && 'error' in body && typeof body.error === 'string'
-        ? body.error
-        : 'Could not create account.';
-      setError(message);
-      setBusy(false);
+    if (signUpError) {
+      setError(signUpError.message === 'User already registered'
+        ? 'An account with that email already exists.'
+        : signUpError.message);
       return;
     }
 
-    const result = await signIn('credentials', { email, password, redirect: false });
-    setBusy(false);
-    if (result?.error) { setError('Account created — please sign in.'); router.push('/login'); return; }
+    if (!data.session) {
+      // Email confirmation is required before a session is issued.
+      setNotice('Check your email to confirm your account, then sign in.');
+      return;
+    }
+
     router.push('/');
     router.refresh();
   }
@@ -53,6 +53,7 @@ export default function RegisterPage() {
           <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required minLength={8} />
         </label>
         {error && <p className="auth-error" role="alert">{error}</p>}
+        {notice && <p role="status">{notice}</p>}
         <button type="submit" className="btn btn-primary" disabled={busy}>{busy ? 'Creating…' : 'Create account'}</button>
         <p>Already have an account? <Link href="/login">Sign in</Link></p>
       </form>

@@ -1,21 +1,25 @@
 import { redirect } from 'next/navigation';
-import { auth } from '@/auth';
-import { prisma } from '@/lib/prisma';
+import { createClient } from '@/lib/supabase/server';
 import { isCv, isProfile, isSession } from '@/lib/validators';
 import { AppClient } from './AppClient';
 
 export default async function Home() {
-  const session = await auth();
-  if (!session?.user?.id) redirect('/login');
-
-  const user = await prisma.user.findUnique({ where: { id: session.user.id } });
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
   if (!user) redirect('/login');
+
+  const { data: row } = await supabase
+    .from('cv_profiles')
+    .select('cv, profile, session')
+    .eq('id', user.id)
+    .single();
 
   return (
     <AppClient
-      cv={isCv(user.cv) ? user.cv : null}
-      profile={isProfile(user.profile) ? user.profile : null}
-      session={isSession(user.session) ? user.session : null}
+      userId={user.id}
+      cv={row && isCv(row.cv) ? row.cv : null}
+      profile={row && isProfile(row.profile) ? row.profile : null}
+      session={row && isSession(row.session) ? row.session : null}
     />
   );
 }

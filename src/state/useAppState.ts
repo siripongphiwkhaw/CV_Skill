@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { createClient } from '../lib/supabase/client';
 import type { Store } from '../lib/storage';
 import { emptyCv, type Cv } from '../types/cv';
 import { emptyProfile, type SkillProfile } from '../types/profile';
@@ -9,15 +10,18 @@ type RemoteField = 'cv' | 'profile' | 'session';
 
 /**
  * Persists to localStorage immediately (fast, works offline) and to the
- * account's database row on a debounce (so the data follows the user across
- * devices). The initial value comes from the server-rendered page when the
- * user is signed in; localStorage is only a fallback/cache after that.
+ * account's cv_profiles row on a debounce (so the data follows the user
+ * across devices), via a direct Supabase update — RLS scopes the write to
+ * the signed-in account, no Next.js API route needed. The initial value
+ * comes from the server-rendered page when the user is signed in;
+ * localStorage is only a fallback/cache after that.
  */
 function usePersisted<T>(
   store: Store<T>,
   fallback: () => T,
   initial: T | null,
   field: RemoteField,
+  userId: string,
 ): [T, (next: T | ((prev: T) => T)) => void] {
   const [value, setValue] = useState<T>(() => initial ?? store.load() ?? fallback());
   const skipNextRemoteSave = useRef(true);
@@ -31,14 +35,12 @@ function usePersisted<T>(
     }
 
     const timeout = setTimeout(() => {
-      fetch('/api/state', {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ field, value }),
-      }).catch(() => { /* best-effort: the local cache still has the latest value */ });
+      const supabase = createClient();
+      // best-effort: on failure, the local cache still has the latest value
+      void supabase.from('cv_profiles').update({ [field]: value }).eq('id', userId);
     }, 600);
     return () => clearTimeout(timeout);
-  }, [store, value, field]);
+  }, [store, value, field, userId]);
 
   return [value, setValue];
 }
@@ -55,15 +57,16 @@ export function maxReachableStep(cv: Cv, profile: SkillProfile, session: JobSess
 }
 
 export interface InitialAppData {
+  userId: string;
   cv: Cv | null;
   profile: SkillProfile | null;
   session: JobSession | null;
 }
 
 export function useAppState(initial: InitialAppData) {
-  const [cv, setCv] = usePersisted<Cv>(cvStore, emptyCv, initial.cv, 'cv');
-  const [profile, setProfile] = usePersisted<SkillProfile>(profileStore, emptyProfile, initial.profile, 'profile');
-  const [session, setSession] = usePersisted<JobSession>(sessionStore, emptySession, initial.session, 'session');
+  const [cv, setCv] = usePersisted<Cv>(cvStore, emptyCv, initial.cv, 'cv', initial.userId);
+  const [profile, setProfile] = usePersisted<SkillProfile>(profileStore, emptyProfile, initial.profile, 'profile', initial.userId);
+  const [session, setSession] = usePersisted<JobSession>(sessionStore, emptySession, initial.session, 'session', initial.userId);
 
   const patchSession = useCallback(
     (patch: Partial<JobSession> | ((prev: JobSession) => Partial<JobSession>)) =>
