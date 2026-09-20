@@ -1,7 +1,10 @@
 import { createServerClient } from '@supabase/ssr';
 import { NextResponse, type NextRequest } from 'next/server';
 
-const PUBLIC_PATHS = new Set(['/login', '/register']);
+// Signed-in users get bounced away from these (they're pointless once authed).
+const AUTH_ONLY_PATHS = new Set(['/login', '/register']);
+// Signed-out visitors may view these without being redirected to /login.
+const ANONYMOUS_OK_PATHS = new Set(['/', '/login', '/register', '/privacy']);
 
 export async function updateSession(request: NextRequest) {
   let response = NextResponse.next({ request });
@@ -27,15 +30,15 @@ export async function updateSession(request: NextRequest) {
   // without it, requests keep using a stale/expired auth cookie.
   const { data: { user } } = await supabase.auth.getUser();
 
-  const isPublicPage = PUBLIC_PATHS.has(request.nextUrl.pathname);
+  const pathname = request.nextUrl.pathname;
 
-  if (!user && !isPublicPage) {
+  if (!user && !ANONYMOUS_OK_PATHS.has(pathname)) {
     const url = request.nextUrl.clone();
     url.pathname = '/login';
     return NextResponse.redirect(url);
   }
 
-  if (user && isPublicPage) {
+  if (user && AUTH_ONLY_PATHS.has(pathname)) {
     const url = request.nextUrl.clone();
     url.pathname = '/';
     return NextResponse.redirect(url);

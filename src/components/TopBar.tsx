@@ -10,9 +10,9 @@ interface Props {
 
 const LINKS: { label: string; step: Step }[] = [
   { label: 'Profile', step: 1 },
-  { label: 'Job', step: 2 },
-  { label: 'My CV', step: 5 },
-  { label: 'Interview prep', step: 6 },
+  { label: 'Job & match', step: 2 },
+  { label: 'Tailor & build', step: 3 },
+  { label: 'Interview prep', step: 4 },
 ];
 
 export function TopBar({ name, maxStep, onGo }: Props) {

@@ -5,12 +5,10 @@ import { Rail } from '../components/Rail';
 import { TopBar } from '../components/TopBar';
 import { computeMatch } from '../lib/score';
 import { maxReachableStep, useAppState, type InitialAppData } from '../state/useAppState';
-import { BuildStep } from '../steps/BuildStep';
-import { CompareStep } from '../steps/CompareStep';
 import { InterviewStep } from '../steps/InterviewStep';
-import { JobStep } from '../steps/JobStep';
+import { JobMatchStep } from '../steps/JobMatchStep';
 import { ProfileStep } from '../steps/ProfileStep';
-import { UpdateStep } from '../steps/UpdateStep';
+import { TailorBuildStep } from '../steps/TailorBuildStep';
 
 export function AppClient(initial: InitialAppData) {
   const state = useAppState(initial);
@@ -18,7 +16,7 @@ export function AppClient(initial: InitialAppData) {
   const reduce = useReducedMotion();
   const maxStep = maxReachableStep(cv, profile, session);
   const step = Math.min(session.step, maxStep) as typeof session.step;
-  const match = session.analysis && step >= 3
+  const match = session.analysis
     ? computeMatch(session.analysis.requirements, new Set(session.accepted)).percent
     : null;
 
@@ -35,11 +33,9 @@ export function AppClient(initial: InitialAppData) {
           transition={{ duration: 0.24, ease: [0.2, 0, 0, 1] }}
         >
           {step === 1 && <ProfileStep {...state} />}
-          {step === 2 && <JobStep {...state} />}
-          {step === 3 && <CompareStep {...state} />}
-          {step === 4 && <UpdateStep {...state} />}
-          {step === 5 && <BuildStep {...state} />}
-          {step === 6 && <InterviewStep {...state} />}
+          {step === 2 && <JobMatchStep {...state} />}
+          {step === 3 && <TailorBuildStep {...state} />}
+          {step === 4 && <InterviewStep {...state} />}
         </motion.main>
       </div>
     </>

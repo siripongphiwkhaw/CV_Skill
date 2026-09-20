@@ -26,21 +26,28 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="auth-page">
-      <form className="auth-card" onSubmit={onSubmit}>
-        <h1>Sign in</h1>
-        <label>
-          Email
-          <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required autoFocus />
-        </label>
-        <label>
-          Password
-          <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required minLength={8} />
-        </label>
-        {error && <p className="auth-error" role="alert">{error}</p>}
-        <button type="submit" className="btn btn-primary" disabled={busy}>{busy ? 'Signing in…' : 'Sign in'}</button>
-        <p>No account? <Link href="/register">Create one</Link></p>
-      </form>
+    <div className="auth-split">
+      <div className="auth-brand-panel">
+        <Link href="/" className="topbar-brand"><span className="topbar-mark" aria-hidden="true" />Job Fit CV</Link>
+        <div className="auth-brand-tagline">Welcome back. Pick up right where you left off.</div>
+        <div className="auth-brand-foot">© Job Fit CV</div>
+      </div>
+      <div className="auth-form-panel">
+        <form className="auth-card" onSubmit={onSubmit}>
+          <h1>Sign in</h1>
+          <label>
+            Email
+            <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required autoFocus />
+          </label>
+          <label>
+            Password
+            <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required minLength={8} />
+          </label>
+          {error && <p className="auth-error" role="alert">{error}</p>}
+          <button type="submit" className="btn btn-primary" disabled={busy}>{busy ? 'Signing in…' : 'Sign in'}</button>
+          <p>No account? <Link href="/register">Create one</Link></p>
+        </form>
+      </div>
     </div>
   );
 }

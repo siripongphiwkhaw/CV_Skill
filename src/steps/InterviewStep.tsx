@@ -33,7 +33,7 @@ export function InterviewStep({ cv, session, patchSession, goTo, startAnotherJob
   }, [analysis, cv, session]);
 
   if (!analysis || !input) {
-    return <section className="card"><h2>6 · Interview</h2><p className="hint">Run the comparison in step 2 first.</p></section>;
+    return <section className="card"><h2>4 · Interview</h2><p className="hint">Run the comparison in step 2 first.</p></section>;
   }
 
   const pack = session.interview;
@@ -44,7 +44,7 @@ export function InterviewStep({ cv, session, patchSession, goTo, startAnotherJob
     <>
       <section className="card">
         <div className="card-head">
-          <h2>6 · Interview prep and a fit check</h2>
+          <h2>4 · Interview prep and a fit check</h2>
           <p className="hint">Questions this posting is likely to produce, each with a hint pointing at something already on your CV. Then what the job is actually like — so you can decide if you want it.</p>
         </div>
         <PromptExchange
@@ -116,7 +116,7 @@ export function InterviewStep({ cv, session, patchSession, goTo, startAnotherJob
         >
           Hold to start another job
         </HoldButton>
-        <button type="button" className="btn btn-secondary" onClick={() => goTo(5)}>Back to the CV</button>
+        <button type="button" className="btn btn-secondary" onClick={() => goTo(3)}>Back to Tailor & build</button>
         <span className="small">Your profile and CV stay; only the job session resets.</span>
       </div>
     </>

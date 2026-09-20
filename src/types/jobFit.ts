@@ -54,7 +54,7 @@ export interface InterviewPack {
   reflectionPrompts: string[];
 }
 
-export type Step = 1 | 2 | 3 | 4 | 5 | 6;
+export type Step = 1 | 2 | 3 | 4;
 
 /** Everything about the one job currently being worked on. */
 export interface JobSession {
@@ -63,14 +63,14 @@ export interface JobSession {
   company: string;
   jd: string;
   analysis: JobFitAnalysis | null;
-  /** Indexes into analysis.requirements the user has closed in step 4. */
+  /** Indexes into analysis.requirements the user has closed in step 3. */
   accepted: number[];
-  /** Answers typed in step 4, keyed by requirement index. */
+  /** Answers typed in step 3, keyed by requirement index. */
   answers: Record<string, string>;
   builtCv: Cv | null;
   changes: string[];
   interview: InterviewPack | null;
-  /** Self-check answers from step 6, keyed by prompt index. */
+  /** Self-check answers from step 4, keyed by prompt index. */
   reflections?: Record<string, string>;
 }
 

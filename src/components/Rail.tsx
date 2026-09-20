@@ -3,10 +3,8 @@ import { AnimatedNumber, RailMark } from './motion';
 
 const STEPS: { label: string; desc: string }[] = [
   { label: 'Profile', desc: 'Skills from your CV + survey' },
-  { label: 'Job', desc: 'Paste the posting' },
-  { label: 'Compare', desc: 'Match %, gaps, equivalents' },
-  { label: 'Update', desc: 'Answer, draft, accept' },
-  { label: 'Build', desc: 'Tailored CV, export PDF' },
+  { label: 'Job & match', desc: 'Paste the posting, see how you compare' },
+  { label: 'Tailor & build', desc: 'Close gaps, export your CV' },
   { label: 'Interview', desc: 'Questions, scenarios, fit check' },
 ];
 
@@ -22,7 +20,7 @@ export function Rail({ current, maxStep, match, onGo }: Props) {
     <aside className="card rail no-print" aria-label="Your progress">
       <div>
         <div className="rail-title">Your progress</div>
-        <div className="small">{current - 1} of 6 steps done</div>
+        <div className="small">{current - 1} of 4 steps done</div>
         <div className="rail-bar" aria-hidden="true">
           {STEPS.map((_, i) => {
             const n = i + 1;

@@ -51,7 +51,7 @@ export function cvHasContent(cv: Cv): boolean {
 
 /** Which step the user may jump to. Steps only unlock once the data they need exists. */
 export function maxReachableStep(cv: Cv, profile: SkillProfile, session: JobSession): Step {
-  if (session.analysis) return 6;
+  if (session.analysis) return 4;
   if (profile.skills.length > 0 || cvHasContent(cv)) return 2;
   return 1;
 }
