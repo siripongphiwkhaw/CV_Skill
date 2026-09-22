@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react';
 import { PromptExchange } from '../components/PromptExchange';
+import { useT } from '../lib/i18n/useT';
 import { cvWithIds, extractSkills, importCv, type CvReply, type ExtractSkillsReply } from '../exchanges';
 import { cvToText } from '../lib/cvText';
 import { newId } from '../lib/ids';
@@ -14,6 +15,7 @@ const CATEGORY_LABEL: Record<SkillEntry['category'], string> = {
 const LEVEL_ITEMS = [{ value: 'none', label: '–' }, '1', '2', '3', '4', '5'];
 
 export function ProfileStep({ cv, setCv, profile, setProfile, goTo }: AppState) {
+  const t = useT();
   const [pasted, setPasted] = useState('');
   const [reimport, setReimport] = useState(false);
   const imported = cvHasContent(cv);
@@ -72,7 +74,7 @@ export function ProfileStep({ cv, setCv, profile, setProfile, goTo }: AppState) 
       <section className="card">
         <div className="card-head">
           <h2>1 · Your skill profile</h2>
-          <p className="hint">Paste your current CV once. It is turned into a structured document and a skill list you can rate. Saved in this browser only.</p>
+          <p className="hint">{t('steps.profile.pasteHint')}</p>
         </div>
 
         {imported && !reimport ? (
@@ -104,7 +106,7 @@ export function ProfileStep({ cv, setCv, profile, setProfile, goTo }: AppState) 
         <div className="card-head-row">
           <div className="card-head">
             <h3>Your skills ({profile.skills.length})</h3>
-            <p className="hint">Rate yourself honestly — this is what the job comparison uses. Evidence is quoted from your CV, never invented.</p>
+            <p className="hint">{t('steps.profile.ratingHint')}</p>
           </div>
           <button type="button" className="btn btn-secondary btn-sm" onClick={addSkill}>+ Add a skill</button>
         </div>
@@ -141,13 +143,13 @@ export function ProfileStep({ cv, setCv, profile, setProfile, goTo }: AppState) 
             ))}
           </div>
         )}
-        {profile.skills.length === 0 && <p className="small">No skills yet — run the "Extract skills" exchange above, or add them by hand.</p>}
+        {profile.skills.length === 0 && <p className="small">{t('steps.profile.noSkillsYet')}</p>}
       </section>
 
       <section className="card">
         <div className="card-head">
           <h3>A few follow-up questions ({profile.surveyAnswers.length})</h3>
-          <p className="hint">Things your CV implies but does not say. Skip any you like — unanswered ones are simply not used.</p>
+          <p className="hint">{t('steps.profile.followUpHint')}</p>
         </div>
         {profile.surveyAnswers.map((a, i) => (
           <label className="field" key={i}>
@@ -155,10 +157,10 @@ export function ProfileStep({ cv, setCv, profile, setProfile, goTo }: AppState) 
             <textarea rows={2} value={a.answer} placeholder="Your answer…" onChange={(e) => setAnswer(i, e.target.value)} />
           </label>
         ))}
-        {profile.surveyAnswers.length === 0 && <p className="small">Questions appear here after the skills exchange.</p>}
+        {profile.surveyAnswers.length === 0 && <p className="small">{t('steps.profile.questionsEmpty')}</p>}
         <div className="row divider-top">
           <button type="button" className="btn btn-primary" disabled={!canContinue} onClick={() => goTo(2)}>Save profile &amp; continue</button>
-          <span className="small">Everything here autosaves. You can come back and re-rate any time.</span>
+          <span className="small">{t('steps.profile.autosaveNote')}</span>
         </div>
       </section>
     </>

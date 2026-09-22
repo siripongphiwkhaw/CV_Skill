@@ -1,4 +1,4 @@
-# Job Fit CV
+# CVskills
 
 A web app that takes one job posting and walks you from "here is my CV" to "here is a CV built for this job, and here is whether I actually want it" — in six steps, with **no API key**. Every AI step is a *prompt exchange*: the app writes the prompt, you paste it into any Claude chat (claude.ai, Claude Code, the desktop app), paste the JSON reply back, and the app validates it before anything is applied.
 

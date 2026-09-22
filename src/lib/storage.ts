@@ -40,11 +40,16 @@ export function createStore<T>(key: string, isT: (value: unknown) => value is T)
 }
 
 export const KEYS = {
-  cv: 'cv-job-fit:cv:v1',
-  profile: 'cv-job-fit:profile:v1',
-  session: 'cv-job-fit:session:v1',
+  cv: 'cvskills:cv:v1',
+  profile: 'cvskills:profile:v1',
+  session: 'cvskills:session:v1',
+  locale: 'cvskills:locale:v1',
 } as const;
 
 export function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null && !Array.isArray(value);
+}
+
+export function isLocale(value: unknown): value is 'en' | 'th' {
+  return value === 'en' || value === 'th';
 }

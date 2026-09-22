@@ -1,4 +1,4 @@
-// From React Bits (https://reactbits.dev) — MIT + Commons Clause. Adapted for Job Fit CV.
+// From React Bits (https://reactbits.dev) — MIT + Commons Clause. Adapted for CVskills.
 import React, { useEffect, useLayoutEffect, useRef, useState, type CSSProperties, type ReactNode } from 'react';
 import { animate, motion, useMotionValue, useReducedMotion, useTransform, type MotionValue } from 'motion/react';
 

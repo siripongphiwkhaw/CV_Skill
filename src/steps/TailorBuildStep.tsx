@@ -6,6 +6,7 @@ import { CvDocument } from '../cv/CvDocument';
 import { buildCv, cvWithIds, draftBullet, type BuildCvReply, type DraftBulletReply } from '../exchanges';
 import { newId } from '../lib/ids';
 import { computeMatch } from '../lib/score';
+import { useT } from '../lib/i18n/useT';
 import FuseButton from '../reactbits/FuseButton/FuseButton';
 import HoldButton from '../reactbits/HoldButton/HoldButton';
 import type { AppState } from '../state/useAppState';
@@ -23,6 +24,7 @@ const UNDO_WINDOW = 4000;
 
 export function TailorBuildStep(state: AppState) {
   const { cv, setCv, session, patchSession, goTo } = state;
+  const t = useT();
   const analysis = session.analysis;
 
   // --- gap-closing (from UpdateStep) ---
@@ -38,7 +40,7 @@ export function TailorBuildStep(state: AppState) {
   const [toast, setToast] = useState<string | null>(null);
 
   if (!analysis) {
-    return <section className="card"><h2>3 · Tailor & build</h2><p className="hint">Run the comparison in step 2 first.</p></section>;
+    return <section className="card"><h2>3 · Tailor & build</h2><p className="hint">{t('steps.gate.needComparison')}</p></section>;
   }
 
   const accepted = new Set(session.accepted);
@@ -146,7 +148,7 @@ export function TailorBuildStep(state: AppState) {
       <section className="card no-print">
         <div className="card-head">
           <h2>3 · Tailor & build</h2>
-          <p className="hint">Close the gaps you can — the preview on the right updates live — then export a CV tailored to this job.</p>
+          <p className="hint">{t('steps.tailorBuild.introHint')}</p>
         </div>
         <div className="row">
           <span className="chip chip-info">Match {baseline.percent}% → <AnimatedNumber value={match.percent} />%</span>
@@ -162,13 +164,13 @@ export function TailorBuildStep(state: AppState) {
 
       <div className="tailor-grid no-print">
         <div className="stack">
-          {gaps.length === 0 && <section className="card"><p className="hint">Nothing left to close — every requirement is covered or already accepted.</p></section>}
+          {gaps.length === 0 && <section className="card"><p className="hint">{t('steps.tailorBuild.noGapsLeft')}</p></section>}
 
           {closedGaps.map(({ r, i }) => (
             <section className="card" key={`closed-${i}`} style={{ flexDirection: 'row', alignItems: 'center', flexWrap: 'wrap' }}>
               <span className="chip chip-covered">Closed · {r.priority}</span>
               <strong>{r.requirement}</strong>
-              <span className="small" style={{ flex: 1, minWidth: 160 }}>Counted as covered. The bullet or skill you added stays on your CV either way.</span>
+              <span className="small" style={{ flex: 1, minWidth: 160 }}>{t('steps.tailorBuild.closedNote')}</span>
               <button type="button" className="link" onClick={() => reopen(i)}>Reopen</button>
             </section>
           ))}
@@ -200,7 +202,7 @@ export function TailorBuildStep(state: AppState) {
                     {r.equivalent && <p className="small"><b style={{ color: 'var(--color-caution-ink)' }}>You already have:</b> {r.equivalent.yourSkill} — {r.equivalent.note}</p>}
                   </div>
                 </div>
-                <textarea rows={3} value={answer} onChange={(e) => setAnswer(i, e.target.value)} placeholder="Answer in your own words — tools, where, how much. Leave numbers out if you are not sure; they become placeholders." />
+                <textarea rows={3} value={answer} onChange={(e) => setAnswer(i, e.target.value)} placeholder={t('steps.tailorBuild.answerPlaceholder')} />
                 <div className="row">
                   <AddSkillControl
                     groups={cv.skills} skill={r.skill || r.requirement} disabled={isArmed}
@@ -239,7 +241,7 @@ export function TailorBuildStep(state: AppState) {
             <div className="card-head-row">
               <div className="card-head">
                 <h3>Your CV for this job</h3>
-                <p className="hint">Harvard style, one column, no tables — so any applicant tracking system reads it in order. Click any bullet on the page to edit it.</p>
+                <p className="hint">{t('steps.tailorBuild.previewExplainer')}</p>
               </div>
               <div className="row">
                 <span className="chip chip-info">Match {match.percent}%</span>
@@ -270,7 +272,7 @@ export function TailorBuildStep(state: AppState) {
                 <ol style={{ margin: 0, paddingLeft: 20 }} className="stack">
                   {session.changes.map((c, i) => <li key={i}>{c}</li>)}
                 </ol>
-                <p className="small">No facts added or removed — only order, emphasis and wording.</p>
+                <p className="small">{t('steps.tailorBuild.noFactsChangedNote')}</p>
               </div>
             )}
           </section>
@@ -285,7 +287,7 @@ export function TailorBuildStep(state: AppState) {
       <div className="row no-print">
         <button type="button" className="btn btn-primary" onClick={() => goTo(4)}>Continue to Interview prep</button>
         <button type="button" className="btn btn-secondary" onClick={() => goTo(2)}>Back to Job & match</button>
-        <span className="small">Bracketed [placeholders] are yours to fill before exporting.</span>
+        <span className="small">{t('steps.tailorBuild.placeholdersNote')}</span>
       </div>
       {toast && <div className="toast" role="status">{toast}</div>}
     </>

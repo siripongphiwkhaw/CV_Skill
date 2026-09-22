@@ -4,6 +4,7 @@ import { Cascade } from '../components/motion';
 import { interviewPrep, type InterviewPrepReply } from '../exchanges';
 import { cvToText } from '../lib/cvText';
 import { computeMatch } from '../lib/score';
+import { useT } from '../lib/i18n/useT';
 import HoldButton from '../reactbits/HoldButton/HoldButton';
 import JellyRadio from '../reactbits/JellyRadio/JellyRadio';
 import type { AppState } from '../state/useAppState';
@@ -13,6 +14,7 @@ const KIND_LABEL = { behavioral: 'Behavioral', technical: 'Technical', case: 'Ca
 const OPTIONS = [{ value: 'none', label: 'Not yet' }, 'Yes', 'Unsure', 'No'];
 
 export function InterviewStep({ cv, session, patchSession, goTo, startAnotherJob }: AppState) {
+  const t = useT();
   const analysis = session.analysis;
   const reflections = session.reflections ?? {};
 
@@ -33,7 +35,7 @@ export function InterviewStep({ cv, session, patchSession, goTo, startAnotherJob
   }, [analysis, cv, session]);
 
   if (!analysis || !input) {
-    return <section className="card"><h2>4 · Interview</h2><p className="hint">Run the comparison in step 2 first.</p></section>;
+    return <section className="card"><h2>4 · Interview</h2><p className="hint">{t('steps.gate.needComparison')}</p></section>;
   }
 
   const pack = session.interview;
@@ -45,7 +47,7 @@ export function InterviewStep({ cv, session, patchSession, goTo, startAnotherJob
       <section className="card">
         <div className="card-head">
           <h2>4 · Interview prep and a fit check</h2>
-          <p className="hint">Questions this posting is likely to produce, each with a hint pointing at something already on your CV. Then what the job is actually like — so you can decide if you want it.</p>
+          <p className="hint">{t('steps.interview.introHint')}</p>
         </div>
         <PromptExchange
           exchange={interviewPrep} input={input} title="Interview prep"
@@ -74,7 +76,7 @@ export function InterviewStep({ cv, session, patchSession, goTo, startAnotherJob
           <section className="card">
             <div className="card-head">
               <h3>A week in this job</h3>
-              <p className="hint">Three realistic scenarios drawn from the posting's responsibilities.</p>
+              <p className="hint">{t('steps.interview.scenariosHint')}</p>
             </div>
             <div className="scenarios">
               {pack.scenarios.map((s, i) => (
@@ -90,7 +92,7 @@ export function InterviewStep({ cv, session, patchSession, goTo, startAnotherJob
           <section className="card">
             <div className="card-head">
               <h3>Do you actually want this?</h3>
-              <p className="hint">Three honest prompts. Nothing is scored — this is for you.</p>
+              <p className="hint">{t('steps.interview.reflectHint')}</p>
             </div>
             {pack.reflectionPrompts.map((p, i) => (
               <div className="reflect" key={i}>

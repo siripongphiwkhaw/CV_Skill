@@ -5,6 +5,7 @@ import { Cascade } from '../components/motion';
 import { jobFit, type JobFitReply } from '../exchanges';
 import { cvToText } from '../lib/cvText';
 import { computeMatch } from '../lib/score';
+import { useT } from '../lib/i18n/useT';
 import type { AppState } from '../state/useAppState';
 import type { Requirement } from '../types/jobFit';
 
@@ -12,6 +13,7 @@ const BAND_LABEL = { good: 'Strong match', fair: 'Fair match', poor: 'Weak match
 const BAND_CHIP = { good: 'chip-covered', fair: 'chip-partial', poor: 'chip-missing' } as const;
 
 export function JobMatchStep({ cv, profile, session, patchSession, goTo }: AppState) {
+  const t = useT();
   const [showStandard, setShowStandard] = useState(true);
 
   const input = useMemo(() => ({
@@ -40,7 +42,7 @@ export function JobMatchStep({ cv, profile, session, patchSession, goTo }: AppSt
       <section className="card">
         <div className="card-head">
           <h2>2 · Job & match</h2>
-          <p className="hint">Paste the whole posting — requirements, responsibilities, the lot. Boilerplate (benefits, EEO text) is ignored automatically.</p>
+          <p className="hint">{t('steps.jobMatch.pasteHint')}</p>
         </div>
         <div className="row" style={{ alignItems: 'stretch' }}>
           <label className="field" style={{ flex: 2, minWidth: 220 }}>
@@ -63,7 +65,7 @@ export function JobMatchStep({ cv, profile, session, patchSession, goTo }: AppSt
           applied={analysis ? `Applied · ${analysis.requirements.length} requirements` : null}
           onResult={apply}
         />
-        {analysis && <p className="small">Re-running the exchange replaces the comparison below and resets steps 3–4.</p>}
+        {analysis && <p className="small">{t('steps.jobMatch.rerunNote')}</p>}
       </section>
 
       {analysis && match && (
@@ -72,7 +74,7 @@ export function JobMatchStep({ cv, profile, session, patchSession, goTo }: AppSt
             <div className="card-head-row">
               <div className="card-head">
                 <h3>How you match — {analysis.roleTitle || session.jobTitle || 'this job'}</h3>
-                <p className="hint">Numbers are computed here from the requirement list (must-have ×3, nice-to-have ×1; partial counts half), not by the model.</p>
+                <p className="hint">{t('steps.jobMatch.scoringHint')}</p>
               </div>
               <span className={`chip ${BAND_CHIP[match.band]}`}>{BAND_LABEL[match.band]}</span>
             </div>
@@ -82,7 +84,7 @@ export function JobMatchStep({ cv, profile, session, patchSession, goTo }: AppSt
               <ScoreRing percent={match.nicePercent} label="Nice-to-have" note={countLine('nice')} color="var(--color-positive)" />
             </div>
             {match.mustPercent < 50 && must.length > 0 && (
-              <div className="notice notice-caution">Under half of the must-haves are covered. You can still continue — the next step is where this number moves.</div>
+              <div className="notice notice-caution">{t('steps.jobMatch.lowMatchCaution')}</div>
             )}
             {analysis.overallNotes && <div className="summary-box"><strong>In short:</strong> {analysis.overallNotes}</div>}
           </section>
@@ -101,7 +103,7 @@ export function JobMatchStep({ cv, profile, session, patchSession, goTo }: AppSt
               </div>
               {showStandard && (
                 <>
-                  <p className="small">General knowledge about the role — worth knowing before the interview, never counted in your match.</p>
+                  <p className="small">{t('steps.jobMatch.standardExplainer')}</p>
                   <div className="row">
                     {analysis.standardRequirements.map((s, i) => (
                       <span className="chip chip-outline" key={i} title={s.note}>

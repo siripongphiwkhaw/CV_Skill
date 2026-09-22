@@ -1,0 +1,132 @@
+/* Dark landing hero. Scoped to .landing-hero-dark so none of it reaches the
+ * light sections below — tokens.css stays the app's light paper system. */
+
+.landing-hero-dark {
+  --hero-bg: #0b0b10;
+  --hero-bg-2: #15151c;
+  --hero-ink: #f5f5f7;
+  --hero-ink-2: #a6a6b3;
+  --hero-accent: var(--color-brand);
+  --hero-rule: rgba(255, 255, 255, 0.12);
+  --font-display: 'Syne', var(--font-ui);
+  --font-hero-ui: 'Space Grotesk', var(--font-ui);
+
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: radial-gradient(120% 80% at 50% 0%, var(--hero-bg-2), var(--hero-bg) 60%);
+  color: var(--hero-ink);
+  font-family: var(--font-hero-ui);
+}
+
+.landing-hero-dark .landing-nav {
+  background: transparent;
+  border-bottom: 1px solid var(--hero-rule);
+}
+.landing-hero-dark .topbar-brand {
+  color: var(--hero-ink);
+  font-family: var(--font-display);
+  letter-spacing: -0.02em;
+}
+.landing-hero-dark .landing-nav a { color: var(--hero-ink-2); }
+.landing-hero-dark .landing-nav a:hover { color: var(--hero-ink); }
+.landing-hero-dark .landing-nav a.btn-primary { color: #fff; }
+.landing-hero-dark .locale-toggle { border-color: var(--hero-rule); }
+.landing-hero-dark .locale-toggle button { color: var(--hero-ink-2); }
+.landing-hero-dark .locale-toggle button.active { background: var(--hero-accent); color: #fff; }
+
+.hero-band {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-md);
+  text-align: center;
+  padding: var(--space-xl) var(--space-lg) 96px;
+}
+.hero-band h1 {
+  margin: 0;
+  max-width: 18ch;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(1.75rem, 4.5vw, 3.25rem);
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+  color: var(--hero-ink);
+}
+.hero-band p {
+  margin: 0;
+  max-width: 54ch;
+  font-size: var(--text-lg);
+  line-height: 1.6;
+  color: var(--hero-ink-2);
+}
+
+/* ---------- 3D wordmark ---------- */
+
+.hero-logo3d { perspective: 900px; padding: var(--space-sm) 0; }
+
+/* Scroll-linked zoom. The mark grows while its opacity and brightness fall
+ * faster than the scale rises, so it sinks into the dark ground instead of
+ * staying lit and popping out. Lives on its own element — the tilt owns the
+ * transform on .hero-logo3d-stack, and a CSS animation would beat it. */
+@keyframes hero-logo-zoom {
+  0%   { transform: scale(1); opacity: 1; filter: brightness(1); }
+  55%  { transform: scale(1.44); opacity: 0.3; filter: brightness(0.45); }
+  100% { transform: scale(1.8); opacity: 0; filter: brightness(0.45); }
+}
+
+.hero-logo3d-zoom {
+  transform-origin: 50% 45%;
+  will-change: transform, opacity, filter;
+}
+
+@supports (animation-timeline: scroll()) {
+  .hero-logo3d-zoom {
+    animation: hero-logo-zoom linear both;
+    animation-timeline: scroll(root block);
+    animation-range: 0 90vh;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-logo3d-zoom { animation: none; filter: none; }
+}
+.hero-logo3d-stack {
+  position: relative;
+  transform-style: preserve-3d;
+  display: grid;
+  place-items: center;
+}
+.hero-logo3d-layer {
+  grid-area: 1 / 1;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(2.75rem, 11vw, 7rem);
+  line-height: 1;
+  letter-spacing: -0.04em;
+  color: var(--hero-accent);
+  user-select: none;
+}
+.hero-logo3d-layer.face {
+  color: var(--hero-ink);
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.25);
+}
+
+/* ---------- scroll affordance ---------- */
+
+.hero-scroll {
+  position: absolute;
+  bottom: var(--space-md);
+  left: 50%;
+  transform: translateX(-50%);
+  color: var(--hero-ink-2);
+}
+.hero-scroll:hover { color: var(--hero-ink); }
+
+@media (max-width: 600px) {
+  .hero-band { padding: var(--space-lg) var(--space-sm) 88px; }
+  .landing-hero-dark .landing-nav { flex-direction: row; }
+}

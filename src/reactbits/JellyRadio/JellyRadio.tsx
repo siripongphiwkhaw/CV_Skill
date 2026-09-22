@@ -1,4 +1,4 @@
-// From React Bits (https://reactbits.dev) — MIT + Commons Clause. Adapted for Job Fit CV.
+// From React Bits (https://reactbits.dev) — MIT + Commons Clause. Adapted for CVskills.
 import React, {
   forwardRef,
   useEffect,

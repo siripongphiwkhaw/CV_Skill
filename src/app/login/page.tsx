@@ -4,9 +4,12 @@ import { useState, type FormEvent } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
+import { LocaleToggle } from '@/components/LocaleToggle';
+import { useT } from '@/lib/i18n/useT';
 
 export default function LoginPage() {
   const router = useRouter();
+  const t = useT();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
@@ -28,9 +31,12 @@ export default function LoginPage() {
   return (
     <div className="auth-split">
       <div className="auth-brand-panel">
-        <Link href="/" className="topbar-brand"><span className="topbar-mark" aria-hidden="true" />Job Fit CV</Link>
-        <div className="auth-brand-tagline">Welcome back. Pick up right where you left off.</div>
-        <div className="auth-brand-foot">© Job Fit CV</div>
+        <div className="auth-brand-head">
+          <Link href="/" className="topbar-brand"><span className="topbar-mark" aria-hidden="true" />CVskills</Link>
+          <LocaleToggle />
+        </div>
+        <div className="auth-brand-tagline">{t('auth.login.tagline')}</div>
+        <div className="auth-brand-foot">© CVskills</div>
       </div>
       <div className="auth-form-panel">
         <form className="auth-card" onSubmit={onSubmit}>

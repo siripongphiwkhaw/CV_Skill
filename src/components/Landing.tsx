@@ -1,70 +1,85 @@
-import Link from 'next/link';
+'use client';
 
-const STEPS = [
-  { label: 'Profile', desc: 'Paste your CV, or build one from a skills survey.' },
-  { label: 'Job & match', desc: 'Paste a posting. See your match % and the real gaps.' },
-  { label: 'Tailor & build', desc: 'Close what you can, then export a CV built for that role.' },
-  { label: 'Interview prep', desc: 'Likely questions, scenarios, and an honest fit check.' },
-];
+import Link from 'next/link';
+import { motion, useReducedMotion } from 'motion/react';
+import { LocaleToggle } from './LocaleToggle';
+import { HeroLogo3D } from './HeroLogo3D';
+import { useT } from '../lib/i18n/useT';
 
 export function Landing() {
+  const t = useT();
+  const reduced = useReducedMotion();
+
+  const STEPS = [
+    { label: t('landing.step1Title'), desc: t('landing.step1Desc') },
+    { label: t('landing.step2Title'), desc: t('landing.step2Desc') },
+    { label: t('landing.step3Title'), desc: t('landing.step3Desc') },
+    { label: t('landing.step4Title'), desc: t('landing.step4Desc') },
+  ];
+
   return (
     <div className="landing">
-      <header className="landing-nav">
-        <div className="topbar-brand"><span className="topbar-mark" aria-hidden="true" />Job Fit CV</div>
-        <nav className="row">
-          <Link href="/login">Sign in</Link>
-          <Link href="/register" className="btn btn-primary">Get started free</Link>
-        </nav>
-      </header>
+      <div className="landing-hero-dark">
+        <header className="landing-nav">
+          <div className="topbar-brand"><span className="topbar-mark" aria-hidden="true" />CVskills</div>
+          <nav className="row">
+            <LocaleToggle />
+            <Link href="/login">{t('landing.navSignIn')}</Link>
+            <Link href="/register" className="btn btn-primary">{t('landing.navGetStarted')}</Link>
+          </nav>
+        </header>
 
-      <main>
-        <section className="landing-hero">
-          <h1>Paste your CV. Paste the job. See exactly what to fix.</h1>
-          <p className="hint">
-            A four-step workflow that shows your match against a specific posting, closes the real
-            gaps, and exports a CV tailored to that role — in the same afternoon you found it.
-          </p>
-          <div className="row">
-            <Link href="/register" className="btn btn-primary">Get started free</Link>
-            <Link href="/login" className="btn btn-secondary">Sign in</Link>
-          </div>
+        <section className="hero-band">
+          <HeroLogo3D />
+          <h1>{t('landing.heroDarkTitle')}</h1>
+          <p>{t('landing.heroDarkSubhead')}</p>
+          <Link href="/register" className="btn btn-primary">{t('landing.navGetStarted')}</Link>
         </section>
 
-        <section className="landing-mechanic">
+        <motion.a
+          href="#how-it-works"
+          className="hero-scroll"
+          aria-label={t('landing.heroScrollHint')}
+          animate={reduced ? undefined : { y: [0, 8, 0] }}
+          transition={{ duration: 1.8, repeat: Infinity, ease: 'easeInOut' }}
+        >
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+            <path d="M6 9l6 6 6-6" />
+          </svg>
+        </motion.a>
+      </div>
+
+      <main>
+        <section className="landing-mechanic" id="how-it-works">
           <div className="card-head">
-            <h2>How the AI part actually works</h2>
-            <p className="hint">
-              There's no hidden subscription to our own AI, and nothing to hide: every analysis is a
-              prompt you copy into an AI chat you already have — Claude, or another assistant — and a
-              reply you paste back in. We validate it and apply it. That's it.
-            </p>
+            <h2>{t('landing.mechanicTitle')}</h2>
+            <p className="hint">{t('landing.mechanicBody')}</p>
           </div>
           <div className="landing-flow">
             <div className="landing-flow-node">
               <span className="label">1</span>
-              <p>Your CV and the job posting</p>
+              <p>{t('landing.flow1')}</p>
             </div>
             <span className="landing-flow-arrow" aria-hidden="true">→</span>
             <div className="landing-flow-node">
               <span className="label">2</span>
-              <p>Copy the prompt, paste the reply</p>
+              <p>{t('landing.flow2')}</p>
             </div>
             <span className="landing-flow-arrow" aria-hidden="true">→</span>
             <div className="landing-flow-node">
               <span className="label">3</span>
-              <p>Applied instantly, checked for you</p>
+              <p>{t('landing.flow3')}</p>
             </div>
           </div>
           <ul className="landing-trust">
-            <li>No API key to manage</li>
-            <li>No subscription to the app's own AI</li>
-            <li>Works with whichever assistant you already use</li>
+            <li>{t('landing.trust1')}</li>
+            <li>{t('landing.trust2')}</li>
+            <li>{t('landing.trust3')}</li>
           </ul>
         </section>
 
         <section className="landing-steps">
-          <h2>Four steps, in order</h2>
+          <h2>{t('landing.stepsTitle')}</h2>
           <ol className="landing-steps-rail">
             {STEPS.map((s, i) => (
               <li key={s.label}>
@@ -79,14 +94,14 @@ export function Landing() {
         </section>
 
         <section className="landing-cta">
-          <h2>Your next application, taken more seriously.</h2>
-          <Link href="/register" className="btn btn-primary">Get started free</Link>
+          <h2>{t('landing.closingTitle')}</h2>
+          <Link href="/register" className="btn btn-primary">{t('landing.navGetStarted')}</Link>
         </section>
       </main>
 
       <footer className="landing-footer">
-        <span>© Job Fit CV</span>
-        <Link href="/privacy">Privacy</Link>
+        <span>© CVskills</span>
+        <Link href="/privacy">{t('landing.footerPrivacy')}</Link>
       </footer>
     </div>
   );

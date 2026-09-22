@@ -1,5 +1,6 @@
 import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
+import { LocaleToggle } from './LocaleToggle';
 import type { Step } from '../types/jobFit';
 
 interface Props {
@@ -28,7 +29,7 @@ export function TopBar({ name, maxStep, onGo }: Props) {
 
   return (
     <header className="topbar no-print">
-      <div className="topbar-brand"><span className="topbar-mark" aria-hidden="true" />Job Fit CV</div>
+      <div className="topbar-brand"><span className="topbar-mark" aria-hidden="true" />CVskills</div>
       <nav className="topbar-nav" aria-label="Steps">
         {LINKS.map((l) => (
           <button key={l.step} type="button" disabled={l.step > maxStep} onClick={() => onGo(l.step)}>{l.label}</button>
@@ -36,6 +37,7 @@ export function TopBar({ name, maxStep, onGo }: Props) {
       </nav>
       <div className="topbar-note">No API key · synced to your account</div>
       <div className="topbar-user">
+        <LocaleToggle />
         <div className="avatar" aria-hidden="true">{initial}</div>
         <span>{name.trim() ? name.split(' ')[0] : 'You'}</span>
         <button type="button" className="btn btn-quiet btn-sm" onClick={handleSignOut}>
